@@ -1,0 +1,109 @@
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta http-equiv="Content-Language" content="en" />
+    <title>utmps: an overview</title>
+    <meta name="Description" content="s6: an overview" />
+    <meta name="Keywords" content="utmps overview utmp wtmp utmpx login user accounting unix" />
+    <!-- <link rel="stylesheet" type="text/css" href="//skarnet.org/default.css" /> -->
+  </head>
+<body>
+
+<p>
+<a href="index.html">utmps</a><br />
+<a href="//skarnet.org/software/">Software</a><br />
+<a href="//skarnet.org/">skarnet.org</a>
+</p>
+
+<h1> An overview of utmps </h1>
+
+<p>
+ utmps is a secure implementation of the <em>utmp</em> functionality, i.e.
+user accounting on Unix systems. It includes full POSIX
+<a href="http://pubs.opengroup.org/onlinepubs/9699919799/basedefs/utmpx.h.html">utmpx.h</a>
+functionality, a few extensions created by GNU, and an underlying
+<a href="libutmps/">C client library</a> with better error reporting
+than the POSIX interface specifies.
+</p>
+
+<h2> The issues with traditional utmp </h2>
+
+<p>
+ Traditional <em>utmp</em> implementations, as performed by most Unix
+libcs, are woefully insecure. The fundamental issue with <em>utmp</em>
+is that it requires user programs to write to files (the utmp or wtmp
+databases) owned by either root or a specific system user. That means
+having the suid bit set on programs using it.
+</p>
+
+<h2> The utmps solution </h2>
+
+<p>
+ utmps uses the age old Unix client-server model, following the
+adage "one resource &rarr; one daemon". It provides two daemons,
+<a href="utmps-utmpd.html">utmps-utmpd</a> and
+<a href="utmps-wtmpd.html">utmps-wtmpd</a>, which should be the only
+programs allowed to access the utmp and wtmp databases respectively.
+It provides the
+<a href="libutmps/">utmps client library</a> to communicate with
+those daemons; and it implements the
+<a href="http://pubs.opengroup.org/onlinepubs/9699919799/basedefs/utmpx.h.html">utmpx.h</a>
+interfaces, and the extensions, as wrappers for this client library.
+</p>
+
+<h2> Authentication, local services and superservers </h2>
+
+<p>
+<a href="utmps-utmpd.html">utmps-utmpd</a> and
+<a href="utmps-wtmpd.html">utmps-wtmpd</a> do not listen to the
+network themselves. They are designed to serve only one client
+connection, following the
+<a href="http://cr.yp.to/proto/ucspi.txt">UCSPI model</a> -
+also known as the inetd model. To implement the utmpd and wtmpd
+<a href="//skarnet.org/software/s6/localservice.html">local services</a>,
+a Unix domain superserver such as
+<a href="//skarnet.org/software/s6/s6-ipcserver.html">s6-ipcserver</a>
+is required. s6-ipcserver listens to a socket, and spawns a
+<a href="utmps-utmpd.html">utmps-utmpd</a> process when a client
+calls <a href="http://pubs.opengroup.org/onlinepubs/9699919799/functions/setutxent.html">setutxent()</a>
+for instance.
+</p>
+
+<p>
+ The utmpd and wtmpd services must be started at boot time in
+order for utmp calls to succeed. The <tt>examples/</tt> subdirectory
+of the utmps package has examples on how to start those services
+when using the
+<a href="//skarnet.org/software/s6/">s6</a> supervision suite,
+the <a href="//skarnet.org/software/s6-rc/">s6-rc</a> service manager, or
+the <a href="https://wiki.gentoo.org/wiki/OpenRC">OpenRC</a> service manager.
+</p>
+
+<p>
+ This model has advantages and drawbacks. The main drawback is that it requires
+a daemon to be running in order for the system to provide full POSIX
+functionality. The main advantage, on the other hand, is that no program
+needs to be suid or sgid, and permissions can actually be quite fine-grained.
+</p>
+
+<ul>
+ <li> <a href="utmps-utmpd.html">utmps-utmpd</a> will allow any user to
+read from the utmp database, but will only allow root to write to it. </li>
+ <li> <a href="utmps-wtmpd.html">utmps-wtmpd</a> will only allow a user
+to add an entry to the wtmp database if the user is root, or if the
+<tt>ut_user</tt> field of the added entry resolves to the user's effective
+uid. </li>
+  <li> The <a href="//skarnet.org/software/s6/s6-ipcserver.html">s6-ipcserver</a>
+superserver, which is recommended to implement the utmpd and wtmpd services,
+allows fine-tuning the permissions: it is possible to deny users from
+connecting to the service, or to only allow certain groups, etc. </li>
+</ul>
+
+<p>
+ All in all, I believe the flexibility it offers overweighs the inconvenience
+of having to run services before providing utmp/wtmp.
+</p>
+
+</body>
+</html>

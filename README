@@ -1,0 +1,27 @@
+utmps - a secure utmpx and wtmp implementation
+----------------------------------------------
+
+ utmps is a library implementing the utmpx.h
+family of functions, for use with C libraries that do not
+implement them, such as musl.
+
+ Its particularity is that it does not use setuid or setgid
+programs or files; it does not give random programs the right
+to modify system-wide files. Instead, it comes with a daemon
+that must be running for utmp account to be functional, and
+that takes charge of the utmp data management itself; utmpx.h
+primitives simply communicate with that daemon.
+
+ See http://skarnet.org/software/utmps/ for details.
+
+
+* Installation
+  ------------
+
+ See the INSTALL file.
+
+
+* Contact information
+  -------------------
+
+ Laurent Bercot <ska-skaware at skarnet.org>

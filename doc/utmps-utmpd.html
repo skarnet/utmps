@@ -1,0 +1,77 @@
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta http-equiv="Content-Language" content="en" />
+    <title>utmps: the utmps-utmpd program</title>
+    <meta name="Description" content="utmps: the utmps-utmpd program" />
+    <meta name="Keywords" content="utmps utmp utmpd daemon service utmps-utmpd" />
+    <!-- <link rel="stylesheet" type="text/css" href="//skarnet.org/default.css" /> -->
+  </head>
+<body>
+
+<p>
+<a href="index.html">utmps</a><br />
+<a href="//skarnet.org/software/">Software</a><br />
+<a href="//skarnet.org/">skarnet.org</a>
+</p>
+
+<h1> The utmps-utmpd program </h1>
+
+<p>
+utmps-utmpd manages the utmp database. It expects to be able to create, read and
+modify a file named <tt>utmp</tt> in the directory it is launched in.
+</p>
+
+<p>
+ It is not meant to be called directly; instead, it is expected to be run from
+a script as a part of a "utmpd"
+<a href="//skarnet.org/software/s6/localservice.html">local service</a>.
+</p>
+
+<p>
+ The <tt>examples/</tt> subdirectory of the utmps package provides examples
+on how to run such a service.
+ The simplest way to do so, for testing purposes, is a command line such as:
+</p>
+<pre>s6-ipcserver -l0 utmpd-socket utmps-utmpd</pre>
+<p>
+ while being in the <tt>/run/utmps</tt> directory.
+</p>
+
+<p>
+<tt>/run/utmps/utmpd-socket</tt> is the default place where utmps's
+implementation of the <tt>utmpx.h</tt> functions expects the utmpd
+service to be. It can be changed at build time by giving the
+<tt>--with-utmp-socket=PATH</tt> option to configure.
+</p>
+
+<p>
+ utmps-utmpd does not listen to the socket itself: it reads from its
+standard input and writes to its standard output. It relies
+on a superserver such as
+<a href="//skarnet.org/software/s6/s6-ipcserver.html">s6-ipcserver</a>
+to manage connections to the socket. An instance of utmps-utmpd is run
+for every client connection;
+every instance reads the effective uid of the client in an environment
+variable set by the superserver, which allows it to filter operations -
+for instance, it allows any user to read from the database but it only
+allows root to write to it.
+</p>
+
+<p>
+ If more fine-grained authorizations are required (only allowing
+certain users and groups to connect to the service), the superserver
+can be configured to enforce them.
+</p>
+
+<p>
+ utmps-utmpd does not need to run as root, provided it can write its file;
+it is recommended to create a <em>utmp</em> user and group, dedicated to
+utmps-utmpd and
+<a href="utmps-wtmpd.html">utmps-wtmpd</a> operation, and run the
+superserver as this user and group.
+</p>
+
+</body>
+</html>

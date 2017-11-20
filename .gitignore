@@ -1,0 +1,8 @@
+*.o
+*.lo
+/config.mak
+/src/include/utmps/config.h
+/libutmps.a.xyzzy
+/libutmps.so.xyzzy
+/utmps-utmpd
+/utmps-wtmpd

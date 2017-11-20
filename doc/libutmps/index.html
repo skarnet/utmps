@@ -1,0 +1,171 @@
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta http-equiv="Content-Language" content="en" />
+    <title>utmps: the utmps library interface</title>
+    <meta name="Description" content="utmps: the utmps library interface" />
+    <meta name="Keywords" content="utmps utmp wtmp library libutmps" />
+    <!-- <link rel="stylesheet" type="text/css" href="//skarnet.org/default.css" /> -->
+  </head>
+<body>
+
+<p>
+<a href="../">utmps</a><br />
+<a href="//skarnet.org/software/">Software</a><br />
+<a href="//skarnet.org/">skarnet.org</a>
+</p>
+
+<h1> The <tt>utmps</tt> library interface </h1>
+
+<h2> General information </h2>
+
+<p>
+ <tt>libutmps</tt> is a client library meant to be used by client
+programs needing utmp functionality. It interacts with the
+<a href="../utmps-utmpd.html">utmps-utmpd</a> and
+<a href="../utmps-wtmpd.html">utmps-wtmpd</a> daemons.
+</p>
+
+<p>
+ Application programs can use it directly, but most existing programs
+simply use the standard
+<a href="http://pubs.opengroup.org/onlinepubs/9699919799/basedefs/utmpx.h.html">utmpx.h</a>
+interface, which in utmps is implemented as a series of thin wrappers
+around the utmps library.
+</p>
+
+<h2> Compiling </h2>
+
+<ul>
+ <li> Make sure the utmps headers, as well as the skalibs headers,
+are visible in your header search path. </li>
+ <li> Use <tt>#include &lt;utmps/utmps.h&gt;</tt> </li>
+ <li> To use the standard <tt>utmpx.h</tt> interface, you can
+just <tt>#include &lt;utmpx.h&gt;</tt>, which will work as long
+as the <tt>utmps/utmpx.h</tt> header is accessible in your header
+search path. </li>
+</ul>
+
+<h2> Linking </h2>
+
+<ul>
+ <li> Make sure the utmps library, as well as the skalibs library,
+are visible in your library search path. </li>
+ <li> Link against <tt>-lutmps</tt>, <tt>-lskarnet</tt>, </li>
+<tt>`cat $SYSDEPS/socket.lib`</tt> and
+<tt>`cat $SYSDEPS/tainnow.lib`</tt>, $SYSDEPS being your skalibs
+sysdeps directory. </li>
+</ul>
+
+<h2> Programming </h2>
+
+<p>
+ Check the <tt>utmps/utmps.h</tt> header for the exact function list,
+and the <tt>utmps/utmpx.h</tt> header for the definition of the standard
+<tt>struct utmpx</tt> data type.
+</p>
+
+<h3> Synchronous functions with a specified maximum execution time </h3>
+
+<p>
+ The standard utmpx.h functions are fully synchronous. They were not
+initially meant to perform inter-processus communication; however, in
+utmps, they do. Their synchronous nature is obviously not changed here,
+but the underlying utmps functions use a safety mechanism to bound their
+execution time in case daemons fail to respond. This mechanism is described,
+for instance,
+<a href="//skarnet.org/libs6/ftrigr.html#synctimed">here</a>.
+</p>
+
+<h3> Starting and ending a session </h3>
+
+<p>
+<code>int utmps_start (utmps *a, char const *path, tain_t const *deadline, tain_t *stamp)</code> <br />
+Connects to a <tt>utmps-utmpd</tt> service listening on a Unix domain socket at <em>path</em>.
+<em>a</em> must point to a previously allocated <em>utmps</em> object, which is flat and can
+be allocated in the stack. This object must have been initialized to UTMPS_ZERO before the call.
+<em>a</em> will be a handle describing the session, and must be given to all utmps functions
+called in that session.
+<em>deadline</em> and <em>stamp</em> are used to bound the execution time as described in the
+above link. The function returns 1 if it succeeds; it returns 0, and sets errno, if it fails.
+</p>
+
+<p>
+<code>void utmps_end (utmps *a)</code> <br />
+Ends the session described by <em>a</em>, and releases all used resources.
+</p>
+
+<h3> Reading from the utmp database </h3>
+
+<p>
+ Any user authorized to connect to the utmpd service can call these functions. In other
+words, if <tt>utmps_start()</tt> succeeded, then these functions should not fail due to
+insufficient permissions.
+</p>
+
+<p>
+<code>int utmps_rewind (utmps *a, tain_t const *deadline, tain_t *stamp)</code> <br />
+Performs the <tt>setutxent()</tt> functionality on the utmp database addressed via <em>a</em>,
+i.e. sets the internal pointer at the start of the database.
+On success, stores the result into <em>*b</em> and returns 1. On failure, returns 0 and sets errno.
+</p>
+
+<p>
+<code>int utmps_getent (utmps *a, struct utmpx *b, tain_t const *deadline, tain_t *stamp)</code> <br />
+Performs the <tt>getutxent()</tt> functionality on the utmp database addressed via <em>a</em>.
+On success, stores the result into <em>*b</em> and returns 1. On failure, returns 0 and sets errno.
+</p>
+
+<p>
+<code>int utmps_getid (utmps *a, unsigned short type, char const *id, struct utmpx *b, tain_t const *deadline, tain_t *stamp)</code> <br />
+Performs the <tt>getutxid()</tt> functionality on the utmp database addressed via <em>a</em>,
+using ut_type <em>type</em> and ut_id <em>id</em>. <em>id</em> must be a null-terminated
+string; only its first UTMPS_UT_IDSIZE-1 characters will be taken into account.
+On success, the function stores the result into <em>*b</em> and returns 1. On failure,
+it returns 0 and sets errno.
+</p>
+
+<p>
+<code>int utmps_getline (utmps *a, char const *line, struct utmpx *b, tain_t const *deadline, tain_t *stamp)</code> <br />
+Performs the <tt>getutxline()</tt> functionality on the utmp database addressed via <em>a</em>,
+using ut_line <em>line</em>. <em>line</em> must be a null-terminated
+string; only its first UTMPS_UT_LINESIZE-1 characters will be taken into account.
+On success, the function stores the result into <em>*b</em> and returns 1. On failure,
+it returns 0 and sets errno.
+</p>
+
+<h3> Writing to the utmp database </h3>
+
+<p>
+ Currently, only the super-user is allowed to use this function.
+</p>
+
+<p>
+<code>int utmps_putline (utmps *a, struct utmpx const *b, tain_t const *deadline, tain_t *stamp)</code> <br />
+Performs the <tt>pututxline()</tt> functionality on the utmp database addressed via <em>a</em>,
+i.e. writes the <em>*b</em> structure into the utmp database looking for an appropriate
+record to replace, and appending to the database if no such record can be found.
+On success, the function returns 1. On failure, it returns 0 and sets errno.
+</p>
+
+<h3> Writing to the wtmp database </h3>
+
+<p>
+<code>int utmps_updwtmpx (char const *path, struct utmpx const *b, tain_t const *deadline, tain_t *stamp)</code> <br />
+Unlike the previous functions, <tt>utmps_updwtmpx()</tt> does not use a utmps handle, because
+it does not connect to an utmpd service. Instead, it connects to a wtmpd service listening
+on Unix domain socket <em>path</em>, once for every call. It appends the <em>*b</em> structure
+to the wtmp database, returning 1 on success and 0 (and setting errno) on failure.
+</p>
+
+<p>
+ <tt>utmps_updwtmpx()</tt> will only succeed if the caller is root, or if
+<em>b&rarr;ut_user</em> resolves (according to <tt>getpwnam()</tt>) to the
+effective uid of the caller. In other words: users can append phony records
+for themselves, but not for others, and only root can spoof the whole
+wtmp database.
+</p>
+
+</body>
+</html>

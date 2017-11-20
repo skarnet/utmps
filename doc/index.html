@@ -1,0 +1,132 @@
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta http-equiv="Content-Language" content="en" />
+    <title>utmps - a secure utmp implementation</title>
+    <meta name="Description" content="utmps - a secure utmp implementation" />
+    <meta name="Keywords" content="utmps utmp utmpx unix login accounting wtmp laurent bercot skarnet" />
+    <!-- <link rel="stylesheet" type="text/css" href="//skarnet.org/default.css" /> -->
+  </head>
+<body>
+
+<p>
+<a href="//skarnet.org/software/">Software</a><br />
+<a href="//skarnet.org/">skarnet.org</a>
+</p>
+
+<h1> utmps </h1>
+
+<h2> What is it&nbsp;? </h2>
+
+<p>
+ utmps is an implementation of the <tt>utmp.h</tt> and <tt>utmpx.h</tt>
+family of functions performing user accounting on Unix systems.
+</p>
+
+<p>
+ Traditionally, <tt>utmp</tt> functionality is provided by the system's
+libc. However, not all libcs implement utmp: for instance the
+<a href="https://musl-libc.org/">musl</a> libc, on Linux, does not. The
+main reason for it is that <tt>utmp</tt> functionality is difficult to
+implement in a secure way; in particular, it is impossible to implement
+without either running a daemon or allowing arbitrary programs to tamper
+with user accounting.
+</p>
+
+<p>
+ <tt>utmps</tt> is a secure implementation of user accounting, using
+a daemon as the only authority to manage the utmp and wtmp data; programs
+running utmp functions are just clients to this daemon.
+</p>
+
+<hr />
+
+<ul>
+ <li> <a href="overview.html">An overview of utmps</a> </li>
+</ul>
+
+<hr />
+
+<h2> Installation </h2>
+
+<h3> Requirements </h3>
+
+<ul>
+ <li> A POSIX-compliant system with a standard C development environment </li>
+ <li> GNU make, version 3.81 or later </li>
+ <li> <a href="//skarnet.org/software/skalibs/">skalibs</a> version
+2.6.1.0 or later. It's a build-time requirement. It's also a run-time
+requirement if you link against the shared version of the skalibs
+library. </li>
+</ul>
+
+<h3> Licensing </h3>
+
+<p>
+ s6 is free software. It is available under the
+<a href="http://opensource.org/licenses/ISC">ISC license</a>.
+</p>
+
+<h3> Download </h3>
+
+<ul>
+ <li> The current released version of utmps is <a href="utmps-0.0.1.0.tar.gz">0.0.1.0</a>. </li>
+ <li> Alternatively, you can checkout a copy of the
+<a href="//git.skarnet.org/cgi-bin/cgit.cgi/utmps/">utmps
+git repository</a>:
+<pre> git clone git://git.skarnet.org/utmps </pre> </li>
+ <li> There's also a
+<a href="https://github.com/skarnet/utmps">GitHub mirror</a>
+of the utmps git repository. </li>
+</ul>
+
+<h3> Compilation </h3>
+
+<ul>
+ <li> See the enclosed INSTALL file for installation details. </li>
+</ul>
+
+<h3> Upgrade notes </h3>
+
+<ul>
+ <li> <a href="upgrade.html">This page</a> lists the differences to be aware of between
+the previous versions of utmps and the current one. </li>
+</ul>
+
+<hr />
+
+<h2> Reference </h2>
+
+<h3> Commands </h3>
+
+<ul>
+<li><a href="utmps-utmpd.html">The <tt>utmps-utmpd</tt> program</a></li>
+<li><a href="utmps-wtmpd.html">The <tt>utmps-wtmpd</tt> program</a></li>
+</ul>
+
+<h3> Libraries </h3>
+
+<ul>
+<li> <a href="libutmps/">The <tt>utmps</tt> library interface</a> </li>
+<li> <a href="http://pubs.opengroup.org/onlinepubs/9699919799/basedefs/utmpx.h.html">The
+<tt>utmpx.h</tt> library interface</a> is implemented on top of the utmps library. </li>
+<li> <a href="http://man7.org/linux/man-pages/man3/logwtmp.3.html">The <tt>logwtmp()</tt>
+and <tt>updwtmpx()</tt> functions</a> are also implemented. </li>
+</ul>
+
+<hr />
+
+<a name="related">
+<h2> Related resources </h2>
+</a>
+
+<h3> utmps discussion </h3>
+
+<ul>
+ <li> <tt>utmps</tt> is discussed on the
+<a href="//skarnet.org/lists.html#skaware">skaware</a> mailing-list. </li>
+</ul>
+
+</body>
+</html>

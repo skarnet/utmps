@@ -37,7 +37,7 @@ struct utmpx
   struct timeval ut_tv ;
 
   uint32_t ut_addr_v6[4] ;
-  char __unused[20] ;
+  char _dummy[20] ;
 } ;
 
 #define ut_name ut_user

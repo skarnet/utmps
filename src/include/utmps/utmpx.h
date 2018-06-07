@@ -61,6 +61,7 @@ extern struct utmpx *getutxid (struct utmpx const *) ;
 extern struct utmpx *getutxline (struct utmpx const *) ;
 extern struct utmpx *pututxline (struct utmpx const *) ;
 
+extern int utmpxname (char const *) ;
 extern void updwtmpx (char const *, struct utmpx const *) ;
 extern void logwtmp (char const *, char const *, char const *) ;
 

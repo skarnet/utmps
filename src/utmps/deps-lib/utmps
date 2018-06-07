@@ -6,6 +6,7 @@ logwtmp.o
 pututxline.o
 setutxent.o
 updwtmpx.o
+utmpxname.o
 utmps_end.o
 utmps_getent.o
 utmps_getid.o

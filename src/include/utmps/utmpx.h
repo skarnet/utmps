@@ -69,6 +69,9 @@ extern void logwtmp (char const *, char const *, char const *) ;
 #define UT_NAMESIZE UTMPS_UT_NAMESIZE
 #define UT_HOSTSIZE UTMPS_UT_HOSTSIZE
 
+/* Unused, but some packages require this macro to be present */
+#define UTMPX_FILE "/run/utmps/utmp"
+
 #ifdef __cplusplus
 }
 #endif

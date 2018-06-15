@@ -48,7 +48,9 @@ static void maybe_open (void)
 {
   if (fd < 0)
   {
-    fd = open("utmp", O_RDWR | O_CREAT) ;
+    mode_t m = umask(0) ;
+    fd = open("utmp", O_RDWR | O_CREAT, 0644) ;
+    umask(m) ;
     if (fd < 0)
     {
       int e = errno ;
@@ -188,7 +190,9 @@ static void do_rewind (void)
 int main (void)
 {
   uid_t uid ;
-  char const *x = ucspi_get("REMOTEEUID") ;
+  char const *x ;
+  PROG = "utmps-utmpd" ;
+  x = ucspi_get("REMOTEEUID") ;
   if (!x) strerr_diefu1x(100, "get $IPCREMOTEEUID from environment") ;
   if (!uid0_scan(x, &uid)) strerr_dieinvalid(100, "IPCREMOTEEUID") ;
   if (ndelay_on(0) < 0) strerr_diefu1sys(111, "set stdin non-blocking") ;

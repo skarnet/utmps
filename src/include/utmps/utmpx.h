@@ -40,8 +40,6 @@ struct utmpx
   char _dummy[20] ;
 } ;
 
-#define ut_name ut_user
-
 #define EMPTY 0
 #define BOOT_TIME 2
 #define OLD_TIME 4
@@ -71,6 +69,14 @@ extern void logwtmp (char const *, char const *, char const *) ;
 
 /* Unused, but some packages require this macro to be present */
 #define UTMPX_FILE "/run/utmps/utmp"
+
+/* More old GNU/crap compatibility */
+#define ut_name ut_user
+#define ut_xtime ut_tv.tv_sec
+#define ut_addr ut_addr_v6[0]
+#ifndef _NO_UT_TIME
+# define ut_time ut_tv.tv_sec
+#endif
 
 #ifdef __cplusplus
 }

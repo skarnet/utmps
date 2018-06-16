@@ -160,7 +160,7 @@ static void do_putline (uid_t uid)
     utmps_utmpx_unpack(tmp, &b) ;
     if (idmatch(u.ut_type, u.ut_id, &b)) break ;
   }
-  if (lseek(fd, -sizeof(struct utmpx), SEEK_CUR) < 0)
+  if (lseek(fd, -(off_t)sizeof(struct utmpx), SEEK_CUR) < 0)
   {
     answer(errno) ;
     return ;

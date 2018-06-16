@@ -156,16 +156,18 @@ static void do_putline (uid_t uid)
   {
     struct utmpx b ;
     char tmp[sizeof(struct utmpx)] ;
-    if (!read_utmp_entry(tmp)) goto writeit ;
+    if (!read_utmp_entry(tmp)) break ;
     utmps_utmpx_unpack(tmp, &b) ;
-    if (idmatch(u.ut_type, u.ut_id, &b)) break ;
+    if (idmatch(u.ut_type, u.ut_id, &b) && !strncmp(u.ut_line, b.ut_line, UTMPS_UT_LINESIZE - 1))
+    {
+      if (lseek(fd, -(off_t)sizeof(struct utmpx), SEEK_CUR) < 0)
+      {
+        answer(errno) ;
+        return ;
+      }
+      break ;
+    }
   }
-  if (lseek(fd, -(off_t)sizeof(struct utmpx), SEEK_CUR) < 0)
-  {
-    answer(errno) ;
-    return ;
-  }
- writeit:
   utmps_utmpx_pack(buf, &u) ;
   if (lock_ex(fd) < 0) { answer(errno) ; return ; }
   if (allwrite(fd, buf, sizeof(struct utmpx)) < sizeof(struct utmpx))

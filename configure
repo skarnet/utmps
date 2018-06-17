@@ -45,8 +45,8 @@ Optional features:
   --enable-absolute-paths       do not rely on PATH to access this package's binaries,
                                   hardcode absolute BINDIR/foobar paths instead [disabled]
 
-  --with-utmp-socket=PATH       assume the utmpd socket is at PATH [/run/utmps/.utmpd-socket]
-  --with-wtmp-socket=PATH       assume the wtmpd socket is at PATH [/run/utmps/.wtmpd-socket]
+  --with-utmpd-socket=PATH      assume the utmpd socket is at PATH [/run/utmps/.utmpd-socket]
+  --with-wtmpd-socket=PATH      assume the wtmpd socket is at PATH [/run/utmps/.wtmpd-socket]
 
 EOF
 exit 0

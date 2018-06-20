@@ -39,7 +39,7 @@ int main (void)
   if (!uid0_scan(x, &uid)) strerr_dieinvalid(100, "IPCREMOTEEUID") ;
   if (ndelay_on(0) < 0) strerr_diefu1sys(111, "set stdin non-blocking") ;
   tain_now_g() ;
-  tain_ulong(&deadline, 2) ;
+  tain_ulong(&deadline, 30) ;
   tain_add_g(&deadline, &deadline) ;
 
   w = buffer_timed_get_g(buffer_0small, buf, 1, &deadline) ;

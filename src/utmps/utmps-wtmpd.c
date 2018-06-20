@@ -19,8 +19,8 @@
 
 static void answer (int e)
 {
-  char c = e ;
-  write(1, &c, 1) ;
+  unsigned char c = e ;
+  write(1, (char *)&c, 1) ;
 }
 
 int main (void)

@@ -39,8 +39,8 @@ static void flush1 (void)
 
 static void answer (int e)
 {
-  char c = e ;
-  buffer_putnoflush(buffer_1small, &c, 1) ;
+  unsigned char c = e ;
+  buffer_putnoflush(buffer_1small, (char *)&c, 1) ;
   flush1() ;
 }
 

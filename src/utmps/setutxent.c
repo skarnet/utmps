@@ -6,6 +6,6 @@
 
 void setutxent (void)
 {
-  utmps_here_maybe_init() ;
+  if (!utmps_here_maybe_init()) return ;
   utmps_rewind(&utmps_here, 0, 0) ;
 }

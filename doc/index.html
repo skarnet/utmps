@@ -59,6 +59,11 @@ running utmp functions are just clients to this daemon.
 2.6.4.0 or later. It's a build-time requirement. It's also a run-time
 requirement if you link against the shared version of the skalibs
 library. </li>
+ <li> <a href="//skarnet.org/software/s6/">s6</a> version
+2.7.1.1 or later. It's a <em>run-time</em> requirement only, to run
+the utmpd and wtmpd services (and can be done without if you have a
+suitable replacement for
+<a href="//skarnet.org/software/s6/s6-ipcserver">s6-ipcserver</a>). </li>
 </ul>
 
 <h3> Licensing </h3>

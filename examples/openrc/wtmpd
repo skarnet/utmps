@@ -1,8 +1,13 @@
 #!/sbin/openrc-run
 
-# Assumes the /run/utmps directory already exists and belongs to utmp
-
 name="wtmpd"
-command="s6-ipcserver -- /run/utmps/wtmpd-socket utmps-wtmpd"
+command="s6-ipcserver"
+command_args="/run/utmps/wtmpd-socket utmps-wtmpd"
+command_background=yes
+command_user=utmp
 pidfile="/run/utmps/wtmpd.pid"
-start_stop_daemon_args="-b -m -c utmp -d /run/utmps"
+start_stop_daemon_args="-d /run/utmps"
+
+start_pre() {
+   checkpath -D -d -o utmp:utmp -m 0755 /run/utmps
+}

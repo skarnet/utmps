@@ -53,9 +53,7 @@ static void maybe_open (void)
     umask(m) ;
     if (fd < 0)
     {
-      int e = errno ;
-      answer(e) ;
-      errno = e ;
+      answer(errno) ;
       strerr_diefu1sys(111, "open utmp file") ;
     }
   }
@@ -64,18 +62,16 @@ static void maybe_open (void)
 static int read_utmp_entry (char *s)
 {
   ssize_t r ;
-  int e ;
-  if (lock_sh(fd) < 0) { e = errno ; goto err ; }
+  if (lock_sh(fd) < 0) goto err ;
   r = read(fd, s, sizeof(struct utmpx)) ;
   lock_unx(fd) ;
-  if (r < 0) { e = errno ; goto err ; }
+  if (r < 0) goto err ;
   if (!r) return 0 ;
-  if (r < sizeof(struct utmpx)) { e = EPIPE ; goto err ; }
-  return 1 ;
+  if (r == sizeof(struct utmpx)) return 1 ;
+  errno = EPIPE ;
  err:
-  unlink("utmp") ;
-  answer(e) ;
-  errno = e ;
+  unlink_void("utmp") ;
+  answer(errno) ;
   strerr_diefu1sys(111, "read utmp file") ;
 }
 
@@ -172,9 +168,7 @@ static void do_putline (uid_t uid)
   if (lock_ex(fd) < 0) { answer(errno) ; return ; }
   if (allwrite(fd, buf, sizeof(struct utmpx)) < sizeof(struct utmpx))
   {
-    int e = errno ;
-    answer(e) ;
-    errno = e ;
+    answer(errno) ;
     strerr_diefu1sys(111, "write to utmp") ;
   }
   fsync(fd) ;

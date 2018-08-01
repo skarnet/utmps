@@ -1,2 +1,4 @@
 libutmps.a.xyzzy
+${LIBNSSS}
 -lskarnet
+${MAYBEPTHREAD_LIB}

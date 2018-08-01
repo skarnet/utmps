@@ -36,7 +36,7 @@ libutmps.a.xyzzy: src/utmps/endutxent.lo src/utmps/getutxent.lo src/utmps/getutx
 endif
 libutmps.so.xyzzy: EXTRA_LIBS := -lskarnet
 libutmps.so.xyzzy: src/utmps/endutxent.lo src/utmps/getutxent.lo src/utmps/getutxid.lo src/utmps/getutxline.lo src/utmps/logwtmp.lo src/utmps/pututxline.lo src/utmps/setutxent.lo src/utmps/updwtmpx.lo src/utmps/utmpxname.lo src/utmps/utmps_end.lo src/utmps/utmps_getent.lo src/utmps/utmps_getid.lo src/utmps/utmps_getline.lo src/utmps/utmps_here.lo src/utmps/utmps_here_maybe_init.lo src/utmps/utmps_putline.lo src/utmps/utmps_rewind.lo src/utmps/utmps_start.lo src/utmps/utmps_updwtmpx.lo src/utmps/utmps_utmpx_pack.lo src/utmps/utmps_utmpx_unpack.lo
-utmps-utmpd: EXTRA_LIBS :=
-utmps-utmpd: src/utmps/utmps-utmpd.o libutmps.a.xyzzy -lskarnet
+utmps-utmpd: EXTRA_LIBS := ${MAYBEPTHREAD_LIB}
+utmps-utmpd: src/utmps/utmps-utmpd.o libutmps.a.xyzzy ${LIBNSSS} -lskarnet
 utmps-wtmpd: EXTRA_LIBS :=
 utmps-wtmpd: src/utmps/utmps-wtmpd.o libutmps.a.xyzzy -lskarnet

@@ -4,6 +4,7 @@ In 0.0.1.3
 ----------
 
  - Adaptation to skalibs-2.7.0.0.
+ - Optional nsss support added.
 
 
 In 0.0.1.2

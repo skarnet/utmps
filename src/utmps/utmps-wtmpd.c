@@ -89,7 +89,7 @@ int main (void)
     answer(errno) ;
     strerr_diefu1sys(111, "lseek on wtmp") ;
   }
-  w = allwrite(fd, buf + 1, sizeof(struct utmpx)) ;
+  w = allwrite(fd, buf, sizeof(struct utmpx)) ;
   if (w < sizeof(struct utmpx))
   {
     int e = errno ;

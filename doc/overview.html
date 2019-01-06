@@ -89,7 +89,8 @@ needs to be suid or sgid, and permissions can actually be quite fine-grained.
 
 <ul>
  <li> <a href="utmps-utmpd.html">utmps-utmpd</a> will allow any user to
-read from the utmp database, but will only allow root to write to it. </li>
+read from the utmp database, but will only allow root, or members of the
+same group utmps-utmpd runs as, to write to it. </li>
  <li> <a href="utmps-wtmpd.html">utmps-wtmpd</a> will only allow a user
 to add an entry to the wtmp database if the user is root, or if the
 <tt>ut_user</tt> field of the added entry resolves to the user's effective

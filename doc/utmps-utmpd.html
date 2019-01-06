@@ -56,7 +56,7 @@ for every client connection;
 every instance reads the effective uid of the client in an environment
 variable set by the superserver, which allows it to filter operations -
 for instance, it allows any user to read from the database but it only
-allows root to write to it.
+allows root, and members of the group utmps-utmpd runs as, to write to it.
 </p>
 
 <p>

@@ -1,5 +1,12 @@
 Changelog for utmps.
 
+In 0.0.2.0
+----------
+
+ - Bugfixes.
+ - Members of the utmp group can use pututxline().
+
+
 In 0.0.1.3
 ----------
 

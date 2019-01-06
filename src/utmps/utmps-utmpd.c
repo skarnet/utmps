@@ -140,12 +140,16 @@ static void do_getline (void)
   flush1() ;
 }
 
-static void do_putline (uid_t uid)
+static void do_putline (uid_t uid, gid_t gid)
 {
   struct utmpx u ;
   char buf[sizeof(struct utmpx)] ;
   get0(buf, sizeof(struct utmpx)) ;
-  if (uid) { answer(EPERM) ; return ; }
+  if (uid && gid != getegid())
+  {
+    answer(EPERM) ;
+    return ;
+  }
   utmps_utmpx_unpack(buf, &u) ;
   maybe_open() ;
   for (;;)
@@ -186,11 +190,15 @@ static void do_rewind (void)
 int main (void)
 {
   uid_t uid ;
+  gid_t gid ;
   char const *x ;
   PROG = "utmps-utmpd" ;
   x = ucspi_get("REMOTEEUID") ;
   if (!x) strerr_diefu1x(100, "get $IPCREMOTEEUID from environment") ;
   if (!uid0_scan(x, &uid)) strerr_dieinvalid(100, "IPCREMOTEEUID") ;
+  x = ucspi_get("REMOTEEGID") ;
+  if (!x) strerr_diefu1x(100, "get $IPCREMOTEEGID from environment") ;
+  if (!gid0_scan(x, &gid)) strerr_dieinvalid(100, "IPCREMOTEEGID") ;
   if (ndelay_on(0) < 0) strerr_diefu1sys(111, "set stdin non-blocking") ;
   tain_now_g() ;
 
@@ -205,7 +213,7 @@ int main (void)
       case 'e' : do_getent() ; break ;
       case 'i' : do_getid() ; break ;
       case 'l' : do_getline() ; break ;
-      case 'E' : do_putline(uid) ; break ;
+      case 'E' : do_putline(uid, gid) ; break ;
       case 'r' : do_rewind() ; break ;
       default :
         errno = EPROTO ;

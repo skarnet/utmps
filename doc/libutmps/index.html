@@ -138,7 +138,8 @@ it returns 0 and sets errno.
 <h3> Writing to the utmp database </h3>
 
 <p>
- Currently, only the super-user is allowed to use this function.
+ Currently, only the super-user, and users belonging to the same group
+<tt>utmps-utmpd</tt> is running as, are allowed to use this function.
 </p>
 
 <p>

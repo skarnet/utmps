@@ -2,4 +2,4 @@
 
 s6-setuidgid utmplog
 exec -c
-s6-log t /var/log/utmps-wtmpd
+s6-log -d3 -- t /var/log/utmps-wtmpd

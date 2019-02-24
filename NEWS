@@ -4,6 +4,7 @@ In 0.0.2.1
 ----------
 
  - Adaptation to skalibs-2.8.0.0.
+ - Everything builds as PIC by default.
 
 
 In 0.0.2.0

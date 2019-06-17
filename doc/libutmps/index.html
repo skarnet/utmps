@@ -108,7 +108,7 @@ insufficient permissions.
 <code>int utmps_rewind (utmps *a, tain_t const *deadline, tain_t *stamp)</code> <br />
 Performs the <tt>setutxent()</tt> functionality on the utmp database addressed via <em>a</em>,
 i.e. sets the internal pointer at the start of the database.
-On success, stores the result into <em>*b</em> and returns 1. On failure, returns 0 and sets errno.
+On success, returns 1. On failure, returns 0 and sets errno.
 </p>
 
 <p>

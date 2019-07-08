@@ -60,20 +60,32 @@ static void maybe_open (void)
   }
 }
 
-static int read_utmp_entry (char *s)
+static int read_utmp_entry_unlocked (char *s)
 {
-  ssize_t r ;
-  if (lock_sh(fd) < 0) goto err ;
-  r = read(fd, s, sizeof(struct utmpx)) ;
-  lock_unx(fd) ;
+  ssize_t r = read(fd, s, sizeof(struct utmpx)) ;                                                                                      
   if (r < 0) goto err ;
   if (!r) return 0 ;
   if (r == sizeof(struct utmpx)) return 1 ;
   errno = EPIPE ;
- err:
-  unlink_void("utmp") ;
-  answer(errno) ;
+ err:                                                                                                                          
+  unlink_void("utmp") ;                                                                                                        
+  answer(errno) ;                                                                                                              
   strerr_diefu1sys(111, "read utmp file") ;
+}
+
+static void lockit (int w)
+{
+  if ((w ? lock_ex(fd) : lock_sh(fd)) < 0)
+  {
+    unlink_void("utmp") ;
+    answer(errno) ;
+    strerr_diefu1sys(111, "read utmp file") ;
+  }
+}
+
+static inline void unlockit (void)
+{
+  lock_unx(fd) ;
 }
 
 static int idmatch (unsigned short type, char const *id, struct utmpx const *b)
@@ -95,7 +107,14 @@ static void do_getent (void)
   struct utmpx b ;
   char buf[1 + sizeof(struct utmpx)] = "" ;
   maybe_open() ;
-  if (!read_utmp_entry(buf+1)) { answer(ESRCH) ; return ; }
+  lockit(0) ;
+  if (!read_utmp_entry_unlocked(buf+1))
+  {
+    unlockit() ;
+    answer(ESRCH) ;
+    return ;
+  }
+  unlockit() ;
   utmps_utmpx_unpack(buf+1, &b) ;
   utmps_utmpx_pack(buf+1, &b) ;
   buffer_putnoflush(buffer_1small, buf, 1 + sizeof(struct utmpx)) ;
@@ -111,13 +130,20 @@ static void do_getid (void)
   ushort_unpack_big(rbuf, &type) ;
   rbuf[USHORT_PACK + UTMPS_UT_IDSIZE - 1] = 0 ;
   maybe_open() ;
+  lockit(0) ;
   for (;;)
   {
     struct utmpx b ;
-    if (!read_utmp_entry(sbuf+1)) { answer(ESRCH) ; return ; }
+    if (!read_utmp_entry_unlocked(sbuf+1))
+    {
+      unlockit() ;
+      answer(ESRCH) ;
+      return ;
+    }
     utmps_utmpx_unpack(sbuf+1, &b) ;
     if (idmatch(type, rbuf + USHORT_PACK, &b)) break ;
   }
+  unlockit() ;
   buffer_putnoflush(buffer_1small, sbuf, 1 + sizeof(struct utmpx)) ;
   flush1() ;
 }
@@ -129,14 +155,21 @@ static void do_getline (void)
   get0(rbuf, UTMPS_UT_LINESIZE) ;
   rbuf[UTMPS_UT_LINESIZE - 1] = 0 ;
   maybe_open() ;
+  lockit(0) ;
   for (;;)
   {
     struct utmpx b ;
-    if (!read_utmp_entry(sbuf+1)) { answer(ESRCH) ; return ; }
+    if (!read_utmp_entry_unlocked(sbuf+1))
+    {
+      unlockit() ;
+      answer(ESRCH) ;
+      return ;
+    }
     utmps_utmpx_unpack(sbuf+1, &b) ;
     if ((b.ut_type == LOGIN_PROCESS || b.ut_type == USER_PROCESS)
       && !strncmp(rbuf, b.ut_line, UTMPS_UT_LINESIZE - 1)) break ;
   }
+  unlockit() ;
   buffer_putnoflush(buffer_1small, sbuf, 1 + sizeof(struct utmpx)) ;
   flush1() ;
 }
@@ -153,16 +186,18 @@ static void do_putline (uid_t uid, gid_t gid)
   }
   utmps_utmpx_unpack(buf, &u) ;
   maybe_open() ;
+  lockit(1) ;
   for (;;)
   {
     struct utmpx b ;
     char tmp[sizeof(struct utmpx)] ;
-    if (!read_utmp_entry(tmp)) break ;
+    if (!read_utmp_entry_unlocked(tmp)) break ;
     utmps_utmpx_unpack(tmp, &b) ;
     if (idmatch(u.ut_type, u.ut_id, &b) && !strncmp(u.ut_line, b.ut_line, UTMPS_UT_LINESIZE - 1))
     {
       if (lseek(fd, -(off_t)sizeof(struct utmpx), SEEK_CUR) < 0)
       {
+        unlockit() ;
         answer(errno) ;
         return ;
       }
@@ -170,14 +205,14 @@ static void do_putline (uid_t uid, gid_t gid)
     }
   }
   utmps_utmpx_pack(buf, &u) ;
-  if (lock_ex(fd) < 0) { answer(errno) ; return ; }
   if (allwrite(fd, buf, sizeof(struct utmpx)) < sizeof(struct utmpx))
   {
+    unlockit() ;
     answer(errno) ;
     strerr_diefu1sys(111, "write to utmp") ;
   }
   fsync(fd) ;
-  lock_unx(fd) ;
+  unlockit() ;
   answer(0) ;
 }
 

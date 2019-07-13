@@ -62,14 +62,14 @@ static void maybe_open (void)
 
 static int read_utmp_entry_unlocked (char *s)
 {
-  ssize_t r = read(fd, s, sizeof(struct utmpx)) ;                                                                                      
+  ssize_t r = read(fd, s, sizeof(struct utmpx)) ;
   if (r < 0) goto err ;
   if (!r) return 0 ;
   if (r == sizeof(struct utmpx)) return 1 ;
   errno = EPIPE ;
- err:                                                                                                                          
-  unlink_void("utmp") ;                                                                                                        
-  answer(errno) ;                                                                                                              
+ err:
+  unlink_void("utmp") ;
+  answer(errno) ;
   strerr_diefu1sys(111, "read utmp file") ;
 }
 

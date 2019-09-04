@@ -15,7 +15,7 @@ void logwtmp (char const *line, char const *name, char const *host)
   b.ut_pid = getpid() ;
   {
     tain_t now ;
-    tain_now(&now) ;
+    tain_wallclock_read(&now) ;
     timeval_from_tain(&b.ut_tv, &now) ;
   }
   updwtmpx("", &b) ;

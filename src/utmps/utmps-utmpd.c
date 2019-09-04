@@ -236,6 +236,7 @@ int main (void)
   if (!x) strerr_diefu1x(100, "get $IPCREMOTEEGID from environment") ;
   if (!gid0_scan(x, &gid)) strerr_dieinvalid(100, "IPCREMOTEEGID") ;
   if (ndelay_on(0) < 0) strerr_diefu1sys(111, "set stdin non-blocking") ;
+  tain_now_set_stopwatch() ;
   tain_now_g() ;
 
   for (;;)

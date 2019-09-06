@@ -39,8 +39,7 @@ int main (void)
   if (!x) strerr_diefu1x(100, "get $IPCREMOTEEUID from environment") ;
   if (!uid0_scan(x, &uid)) strerr_dieinvalid(100, "IPCREMOTEEUID") ;
   if (ndelay_on(0) < 0) strerr_diefu1sys(111, "set stdin non-blocking") ;
-  tain_now_set_stopwatch() ;
-  tain_now_g() ;
+  tain_now_set_stopwatch_g() ;
   tain_ulong(&deadline, 30) ;
   tain_add_g(&deadline, &deadline) ;
 

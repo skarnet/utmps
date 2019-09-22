@@ -1,9 +1,16 @@
 Changelog for utmps.
 
+In 0.0.3.0
+----------
+
+ - Adaptation to skalibs-2.9.0.0.
+
+
 In 0.0.2.2
 ----------
 
  - Bugfixes.
+
 
 In 0.0.2.1
 ----------

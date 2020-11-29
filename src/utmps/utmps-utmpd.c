@@ -7,6 +7,7 @@
 #include <errno.h>
 
 #include <skalibs/posixishard.h>
+#include <skalibs/posixplz.h>
 #include <skalibs/types.h>
 #include <skalibs/env.h>
 #include <skalibs/allreadwrite.h>
@@ -15,6 +16,7 @@
 #include <skalibs/tai.h>
 #include <skalibs/djbunix.h>
 #include <skalibs/unix-timed.h>
+
 #include <utmps/utmpx.h>
 #include "utmps-internal.h"
 
@@ -75,7 +77,7 @@ static int read_utmp_entry_unlocked (char *s)
 
 static void lockit (int w)
 {
-  if ((w ? lock_ex(fd) : lock_sh(fd)) < 0)
+  if (fd_lock(fd, w, 0) < 1)
   {
     unlink_void("utmp") ;
     answer(errno) ;
@@ -85,7 +87,7 @@ static void lockit (int w)
 
 static inline void unlockit (void)
 {
-  lock_unx(fd) ;
+  fd_unlock(fd) ;
 }
 
 static int idmatch (unsigned short type, char const *id, struct utmpx const *b)

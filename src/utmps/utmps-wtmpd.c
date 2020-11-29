@@ -15,6 +15,7 @@
 #include <skalibs/tai.h>
 #include <skalibs/djbunix.h>
 #include <skalibs/unix-timed.h>
+
 #include <utmps/utmpx.h>
 #include "utmps-internal.h"
 
@@ -80,7 +81,7 @@ int main (void)
     answer(errno) ;
     strerr_diefu1sys(111, "open wtmp") ;
   }
-  if (lock_ex(fd) < 0)
+  if (fd_lock(fd, 1, 0) < 1)
   {
     answer(errno) ;
     strerr_diefu1sys(111, "open wtmp") ;
@@ -99,10 +100,13 @@ int main (void)
       struct stat st ;
       if (!fstat(fd, &st)) ftruncate(fd, st.st_size - w) ;
     }
+    fd_unlock(fd) ;
     answer(e) ;
+    errno = e ;
     strerr_diefu1sys(111, "append to wtmp") ;
   }
   fsync(fd) ;
+  fd_unlock(fd) ;
   answer(0) ;
   return 0 ;
 }

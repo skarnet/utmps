@@ -46,6 +46,7 @@ Optional features:
   --enable-absolute-paths       do not rely on PATH to access this package's binaries,
                                   hardcode absolute BINDIR/foobar paths instead [disabled]
   --enable-nsss                 use the nsss library for user information [disabled]
+  --enable-libc-includes        overwrite utmpx.h in includedir [disabled]
 
   --with-utmpd-socket=PATH      assume the utmpd socket is at PATH [/run/utmps/.utmpd-socket]
   --with-wtmpd-socket=PATH      assume the wtmpd socket is at PATH [/run/utmps/.wtmpd-socket]
@@ -163,6 +164,7 @@ addlibdpath=''
 vpaths=''
 vpathd=''
 build=
+libcincludes=false
 utmpdpath=/run/utmps/.utmpd-socket
 wtmpdpath=/run/utmps/.wtmpd-socket
 
@@ -195,6 +197,8 @@ for arg ; do
     --disable-slashpackage) sproot= ; slashpackage=false ;;
     --enable-absolute-paths|--enable-absolute-paths=yes) abspath=true ;;
     --disable-absolute-paths|--enable-absolute-paths=no) abspath=false ;;
+    --enable-libc-includes|--enable-libc-includes=yes) libcincludes=true ;;
+    --disable-libc-includes|--enable-libc-includes=no) libcincludes=false ;;
     --enable-nsss|--enable-nsss=yes) usensss=true ;;
     --disable-nsss|--enable-nsss=no) usensss=false ;;
     --enable-*|--disable-*|--with-*|--without-*|--*dir=*) ;;
@@ -447,6 +451,11 @@ if $allpic ; then
   echo "STATIC_LIBS_ARE_PIC := 1"
 else
   echo "STATIC_LIBS_ARE_PIC :="
+fi
+if $libcincludes ; then
+  echo "DO_LIBC_INCLUDES := 1"
+else
+  echo "DO_LIBC_INCLUDES :="
 fi
 if $usensss ; then
   echo "LIBNSSS := -lnsss"

@@ -35,6 +35,17 @@ interface, which in utmps is implemented as a series of thin wrappers
 around the utmps library.
 </p>
 
+<p>
+ A suitable <tt>utmpx.h</tt> header can be found in the <tt>utmps/</tt>
+subdirectory of
+the header installation directory; if the <tt>--enable-libc-includes</tt>
+option has been given to configure, it can also be found directly
+in that directory. (Example: <tt>/usr/include/utmps/utmpz.h</tt> is
+always installed, but if the option has been given at nsss build time,
+<tt>/usr/include/utmpx.h</tt> is also installed and replaces the
+version provided by the libc.)
+</p>
+
 <h2> Compiling </h2>
 
 <ul>
@@ -42,9 +53,17 @@ around the utmps library.
 are visible in your header search path. </li>
  <li> Use <tt>#include &lt;utmps/utmps.h&gt;</tt> </li>
  <li> To use the standard <tt>utmpx.h</tt> interface, you can
-just <tt>#include &lt;utmpx.h&gt;</tt>, which will work as long
-as the <tt>utmps/utmpx.h</tt> header is accessible in your header
-search path. </li>
+just <tt>#include &lt;utmpx.h&gt;</tt>, which will work:
+  <ul>
+   <li> either if the <tt>--enable-libc-includes</tt> option
+has been given at utmps build time </li>
+   <li> or if you give the <tt>-I/usr/include/utmps</tt> option
+to your compiler. (Depending on your standard header location,
+specify that the header search path should include the
+<tt>utmps</tt> subdirectory of that location.) This is useful when
+the administrator did not want to overwrite the libc-provided
+<tt>utmpx.h</tt> file when they installed utmps. </li>
+  </ul> </li>
 </ul>
 
 <h2> Linking </h2>

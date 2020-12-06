@@ -1,9 +1,12 @@
 Changelog for utmps.
 
-In 0.0.3.3
+In 0.1.0.0
 ----------
 
  - Bugfixes.
+ - utmpx.h is not installed by default anymore.
+You now need to explicitly give the --enable-libc-includes
+configure option.
 
 
 In 0.0.3.2

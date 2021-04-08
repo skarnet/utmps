@@ -201,11 +201,11 @@ for arg ; do
     --disable-libc-includes|--enable-libc-includes=no) libcincludes=false ;;
     --enable-nsss|--enable-nsss=yes) usensss=true ;;
     --disable-nsss|--enable-nsss=no) usensss=false ;;
+    --with-utmpd-socket=*) utmpdpath=${arg#*=} ;;
+    --with-wtmpd-socket=*) wtmpdpath=${arg#*=} ;;
     --enable-*|--disable-*|--with-*|--without-*|--*dir=*) ;;
     --host=*|--target=*) target=${arg#*=} ;;
     --build=*) build=${arg#*=} ;;
-    --with-utmpd-socket=*) utmpdpath=${arg#*=} ;;
-    --with-wtmpd-socket=*) wtmpdpath=${arg#*=} ;;
     -* ) echo "$0: unknown option $arg" ;;
     *=*) ;;
     *) target=$arg ;;

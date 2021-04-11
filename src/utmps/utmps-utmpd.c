@@ -104,6 +104,11 @@ static int idmatch (unsigned short type, char const *id, struct utmpx const *b)
   return 0 ;
 }
 
+static inline int onestepback (void)
+{
+  return lseek(fd, -(off_t)sizeof(struct utmpx), SEEK_CUR) >= 0 ;
+}
+
 static void do_getent (void)
 {
   struct utmpx b ;
@@ -114,6 +119,12 @@ static void do_getent (void)
   {
     unlockit() ;
     answer(ESRCH) ;
+    return ;
+  }
+  if (!onestepback())
+  {
+    unlockit() ;
+    answer(errno) ;
     return ;
   }
   unlockit() ;
@@ -145,10 +156,17 @@ static void do_getid (void)
     utmps_utmpx_unpack(sbuf+1, &b) ;
     if (idmatch(type, rbuf + USHORT_PACK, &b)) break ;
   }
+  if (!onestepback())
+  {
+    unlockit() ;
+    answer(errno) ;
+    return ;
+  }
   unlockit() ;
   buffer_putnoflush(buffer_1small, sbuf, 1 + sizeof(struct utmpx)) ;
   flush1() ;
 }
+
 
 static void do_getline (void)
 {
@@ -170,6 +188,12 @@ static void do_getline (void)
     utmps_utmpx_unpack(sbuf+1, &b) ;
     if ((b.ut_type == LOGIN_PROCESS || b.ut_type == USER_PROCESS)
       && !strncmp(rbuf, b.ut_line, UTMPS_UT_LINESIZE - 1)) break ;
+  }
+  if (!onestepback())
+  {
+    unlockit() ;
+    answer(errno) ;
+    return ;
   }
   unlockit() ;
   buffer_putnoflush(buffer_1small, sbuf, 1 + sizeof(struct utmpx)) ;
@@ -197,7 +221,7 @@ static void do_putline (uid_t uid, gid_t gid)
     utmps_utmpx_unpack(tmp, &b) ;
     if (idmatch(u.ut_type, u.ut_id, &b) && !strncmp(u.ut_line, b.ut_line, UTMPS_UT_LINESIZE - 1))
     {
-      if (lseek(fd, -(off_t)sizeof(struct utmpx), SEEK_CUR) < 0)
+      if (!onestepback())
       {
         unlockit() ;
         answer(errno) ;

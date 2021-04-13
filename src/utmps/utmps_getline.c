@@ -11,10 +11,10 @@
 int utmps_getline (utmps *a, char const *line, struct utmpx *b, tain_t const *deadline, tain_t *stamp)
 {
   ssize_t r ;
-  char sbuf[1 + UTMPS_UT_LINESIZE] = "l" ;
+  char sbuf[1 + UTMPS_UT_LINESIZE] __attribute__ ((nonstring)) ;
   char rbuf[1 + sizeof(struct utmpx)] ;
-  memset(sbuf + 1, 0, UTMPS_UT_LINESIZE) ;
-  strncpy(sbuf + 1, line, UTMPS_UT_LINESIZE - 1) ;
+  sbuf[0] = 'l' ;
+  strncpy(sbuf + 1, line, UTMPS_UT_LINESIZE) ;
   if (!ipc_timed_send(a->fd, sbuf, sizeof(sbuf), deadline, stamp)) return 0 ;
   r = ipc_timed_recv(a->fd, rbuf, sizeof(rbuf), 0, deadline, stamp) ;
   if (r < 0) return 0 ;

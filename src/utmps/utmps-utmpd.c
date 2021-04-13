@@ -99,7 +99,7 @@ static int idmatch (unsigned short type, char const *id, struct utmpx const *b)
   else if (type == INIT_PROCESS || type == LOGIN_PROCESS || type == USER_PROCESS || type == DEAD_PROCESS)
   {
     if ((b->ut_type == INIT_PROCESS || b->ut_type == LOGIN_PROCESS || b->ut_type == USER_PROCESS || b->ut_type == DEAD_PROCESS)
-      && !strncmp(id, b->ut_id, UTMPS_UT_IDSIZE - 1)) return 1 ;
+      && !strncmp(id, b->ut_id, UTMPS_UT_IDSIZE)) return 1 ;
   }
   return 0 ;
 }
@@ -135,7 +135,6 @@ static void do_getid (void)
   char sbuf[1 + sizeof(struct utmpx)] = "" ;
   get0(rbuf, USHORT_PACK + UTMPS_UT_IDSIZE) ;
   ushort_unpack_big(rbuf, &type) ;
-  rbuf[USHORT_PACK + UTMPS_UT_IDSIZE - 1] = 0 ;
   maybe_open() ;
   lockit(0) ;
   for (;;)
@@ -160,7 +159,6 @@ static void do_getline (void)
   char rbuf[UTMPS_UT_LINESIZE] ;
   char sbuf[1 + sizeof(struct utmpx)] = "" ;
   get0(rbuf, UTMPS_UT_LINESIZE) ;
-  rbuf[UTMPS_UT_LINESIZE - 1] = 0 ;
   maybe_open() ;
   lockit(0) ;
   for (;;)
@@ -174,7 +172,7 @@ static void do_getline (void)
     }
     utmps_utmpx_unpack(sbuf+1, &b) ;
     if ((b.ut_type == LOGIN_PROCESS || b.ut_type == USER_PROCESS)
-      && !strncmp(rbuf, b.ut_line, UTMPS_UT_LINESIZE - 1)) break ;
+      && !strncmp(rbuf, b.ut_line, UTMPS_UT_LINESIZE)) break ;
   }
   unlockit() ;
   buffer_putnoflush(buffer_1small, sbuf, 1 + sizeof(struct utmpx)) ;
@@ -201,7 +199,7 @@ static void do_putline (uid_t uid, gid_t gid)
     char tmp[sizeof(struct utmpx)] ;
     if (!read_utmp_entry_unlocked(tmp)) break ;
     utmps_utmpx_unpack(tmp, &b) ;
-    if (idmatch(u.ut_type, u.ut_id, &b) && !strncmp(u.ut_line, b.ut_line, UTMPS_UT_LINESIZE - 1))
+    if (idmatch(u.ut_type, u.ut_id, &b) && !strncmp(u.ut_line, b.ut_line, UTMPS_UT_LINESIZE))
     {
       if (!onestepback())
       {

@@ -12,11 +12,11 @@
 int utmps_getid (utmps *a, unsigned short type, char const *id, struct utmpx *b, tain_t const *deadline, tain_t *stamp)
 {
   ssize_t r ;
-  char sbuf[1 + USHORT_PACK + UTMPS_UT_IDSIZE] = "i" ;
+  char sbuf[1 + USHORT_PACK + UTMPS_UT_IDSIZE] __attribute__ ((nonstring)) ;
   char rbuf[1 + sizeof(struct utmpx)] ;
+  sbuf[0] = 'i' ;
   ushort_pack_big(sbuf + 1, type) ;
-  memset(sbuf + 1 + USHORT_PACK, 0, UTMPS_UT_IDSIZE) ;
-  strncpy(sbuf + 1 + USHORT_PACK, id, UTMPS_UT_IDSIZE - 1) ;
+  strncpy(sbuf + 1 + USHORT_PACK, id, UTMPS_UT_IDSIZE) ;
   if (!ipc_timed_send(a->fd, sbuf, sizeof(sbuf), deadline, stamp)) return 0 ;
   r = ipc_timed_recv(a->fd, rbuf, sizeof(rbuf), 0, deadline, stamp) ;
   if (r < 0) return 0 ;

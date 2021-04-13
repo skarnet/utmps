@@ -121,12 +121,6 @@ static void do_getent (void)
     answer(ESRCH) ;
     return ;
   }
-  if (!onestepback())
-  {
-    unlockit() ;
-    answer(errno) ;
-    return ;
-  }
   unlockit() ;
   utmps_utmpx_unpack(buf+1, &b) ;
   utmps_utmpx_pack(buf+1, &b) ;
@@ -156,17 +150,10 @@ static void do_getid (void)
     utmps_utmpx_unpack(sbuf+1, &b) ;
     if (idmatch(type, rbuf + USHORT_PACK, &b)) break ;
   }
-  if (!onestepback())
-  {
-    unlockit() ;
-    answer(errno) ;
-    return ;
-  }
   unlockit() ;
   buffer_putnoflush(buffer_1small, sbuf, 1 + sizeof(struct utmpx)) ;
   flush1() ;
 }
-
 
 static void do_getline (void)
 {
@@ -189,12 +176,6 @@ static void do_getline (void)
     if ((b.ut_type == LOGIN_PROCESS || b.ut_type == USER_PROCESS)
       && !strncmp(rbuf, b.ut_line, UTMPS_UT_LINESIZE - 1)) break ;
   }
-  if (!onestepback())
-  {
-    unlockit() ;
-    answer(errno) ;
-    return ;
-  }
   unlockit() ;
   buffer_putnoflush(buffer_1small, sbuf, 1 + sizeof(struct utmpx)) ;
   flush1() ;
@@ -213,6 +194,7 @@ static void do_putline (uid_t uid, gid_t gid)
   utmps_utmpx_unpack(buf, &u) ;
   maybe_open() ;
   lockit(1) ;
+  onestepback() ;  /* compatibility with glibc implementation */
   for (;;)
   {
     struct utmpx b ;

@@ -1,5 +1,14 @@
 Changelog for utmps.
 
+
+In 0.1.0.1
+----------
+
+ - Bugfixes.
+ - The addition of WTMP_FILE counts as a bugfix, too. :P
+ - Alignment to the glibc behaviour for pututxline().
+
+
 In 0.1.0.0
 ----------
 

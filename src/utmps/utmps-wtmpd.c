@@ -50,6 +50,7 @@ int main (void)
   w = buffer_timed_get_g(buffer_0small, buf, sizeof(struct utmpx), &deadline) ; 
   if (w < sizeof(struct utmpx)) strerr_diefu1sys(111, "read from stdin") ;
   utmps_utmpx_unpack(buf, &b) ;
+  b.ut_user[UTMPS_UT_NAMESIZE - 1] = 0 ;
   if (uid)
   {
     struct passwd *pw ;
@@ -65,13 +66,13 @@ int main (void)
       else
       {
         answer(EPERM) ;
-        strerr_diefu2x(1, "verify ut_user identity", ": no such user") ;
+        strerr_diefu2x(1, "verify ut_user identity: ", "no such user") ;
       }
     }
     if (pw->pw_uid != uid)
     {
       answer(EPERM) ;
-      strerr_diefu2x(1, "verify ut_user identity", ": uid mismatch") ;
+      strerr_diefu2x(1, "verify ut_user identity: ", "uid mismatch") ;
     }
   }
   
@@ -79,17 +80,17 @@ int main (void)
   if (fd < 0)
   {
     answer(errno) ;
-    strerr_diefu1sys(111, "open wtmp") ;
+    strerr_diefu2sys(111, "open", " wtmp") ;
   }
   if (fd_lock(fd, 1, 0) < 1)
   {
     answer(errno) ;
-    strerr_diefu1sys(111, "open wtmp") ;
+    strerr_diefu2sys(111, "lock", " wtmp") ;
   }
   if (lseek(fd, 0, SEEK_END) < 0)
   {
     answer(errno) ;
-    strerr_diefu1sys(111, "lseek on wtmp") ;
+    strerr_diefu2sys(111, "lseek on", " wtmp") ;
   }
   w = allwrite(fd, buf, sizeof(struct utmpx)) ;
   if (w < sizeof(struct utmpx))
@@ -103,7 +104,7 @@ int main (void)
     fd_unlock(fd) ;
     answer(e) ;
     errno = e ;
-    strerr_diefu1sys(111, "append to wtmp") ;
+    strerr_diefu2sys(111, "append to", " wtmp") ;
   }
   fsync(fd) ;
   fd_unlock(fd) ;

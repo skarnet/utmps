@@ -69,7 +69,7 @@ extern void logwtmp (char const *, char const *, char const *) ;
 
 /* Unused, but some packages (ex: procps-ng) require these macros to be present */
 #define UTMPX_FILE "/run/utmps/utmp"
-#define WTMPX_FILE "/run/utmps/wtmp"
+#define WTMPX_FILE "/var/log/wtmp"
 
 /* More old GNU/crap compatibility */
 #define ut_name ut_user

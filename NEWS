@@ -1,5 +1,15 @@
 Changelog for utmps.
 
+In 0.1.0.2
+----------
+
+ - The wtmpd example now uses /var/log/wtmp instead of /run/utmps/wtmp
+since wtmp is supposed to survive across reboots.
+ - WTMPX_FILE, which is unused by utmps, now points to /var/log/wtmp
+so that programs that want to read that file (e.g. lastlog) can
+access it without patching.
+
+
 In 0.1.0.1
 ----------
 

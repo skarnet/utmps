@@ -1,13 +1,19 @@
 #!/sbin/openrc-run
 
-name="utmpd"
-command="s6-ipcserver"
-command_args="/run/utmps/utmpd-socket utmps-utmpd"
-command_background=yes
+depend() {
+  after bootmisc
+  before networking
+}
+
+name=utmpd
+description="utmps daemon for the utmp service"
+command=s6-ipcserver
+command_args=".utmpd-socket utmps-utmpd"
 command_user=utmp
-pidfile="/run/utmps/utmpd.pid"
-start_stop_daemon_args="-d /run/utmps"
+command_background=true
+directory=/run/utmps
+pidfile=/run/utmps/utmpd.pid
 
 start_pre() {
-   checkpath -D -d -o utmp:utmp -m 0755 /run/utmps
+  checkpath -D -d -o utmp:utmp -m 0755 /run/utmps
 }

@@ -1,1 +1,6 @@
+# mount-var-log is not defined in this example;
+# it's there to show that wtmpd should only run
+# once /var/log has been mounted.
+
 utmps-prepare
+mount-var-log

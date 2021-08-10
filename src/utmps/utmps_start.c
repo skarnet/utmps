@@ -4,7 +4,7 @@
 #include <skalibs/socket.h>
 #include <utmps/utmps.h>
 
-int utmps_start (utmps *a, char const *path, tain_t const *deadline, tain_t *stamp)
+int utmps_start (utmps *a, char const *path, tain const *deadline, tain *stamp)
 {
   int fd = ipc_stream_nbcoe() ;
   if (fd < 0) return 0 ;

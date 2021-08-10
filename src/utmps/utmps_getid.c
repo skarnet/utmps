@@ -9,7 +9,7 @@
 #include <utmps/utmps.h>
 #include "utmps-internal.h"
 
-int utmps_getid (utmps *a, unsigned short type, char const *id, struct utmpx *b, tain_t const *deadline, tain_t *stamp)
+int utmps_getid (utmps *a, unsigned short type, char const *id, struct utmpx *b, tain const *deadline, tain *stamp)
 {
   ssize_t r ;
   char sbuf[1 + USHORT_PACK + UTMPS_UT_IDSIZE] __attribute__ ((nonstring)) ;

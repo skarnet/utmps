@@ -7,7 +7,7 @@
 #include <utmps/utmps.h>
 #include "utmps-internal.h"
 
-int utmps_updwtmpx (char const *path, struct utmpx const *b, tain_t const *deadline, tain_t *stamp)
+int utmps_updwtmpx (char const *path, struct utmpx const *b, tain const *deadline, tain *stamp)
 {
   utmps a = UTMPS_ZERO ;
   ssize_t r ;

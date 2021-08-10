@@ -14,7 +14,7 @@ void logwtmp (char const *line, char const *name, char const *host)
   strncpy(b.ut_host, host, UTMPS_UT_HOSTSIZE - 1) ;
   b.ut_pid = getpid() ;
   {
-    tain_t now ;
+    tain now ;
     tain_wallclock_read(&now) ;
     timeval_from_tain(&b.ut_tv, &now) ;
   }

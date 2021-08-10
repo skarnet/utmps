@@ -8,7 +8,7 @@
 #include <utmps/utmps.h>
 #include "utmps-internal.h"
 
-int utmps_getline (utmps *a, char const *line, struct utmpx *b, tain_t const *deadline, tain_t *stamp)
+int utmps_getline (utmps *a, char const *line, struct utmpx *b, tain const *deadline, tain *stamp)
 {
   ssize_t r ;
   char sbuf[1 + UTMPS_UT_LINESIZE] __attribute__ ((nonstring)) ;

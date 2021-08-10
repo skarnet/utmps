@@ -6,7 +6,7 @@
 #include <utmps/utmps.h>
 #include "utmps-internal.h"
 
-int utmps_rewind (utmps *a, tain_t const *deadline, tain_t *stamp)
+int utmps_rewind (utmps *a, tain const *deadline, tain *stamp)
 {
   ssize_t r ;
   char c ;

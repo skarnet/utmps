@@ -8,7 +8,7 @@
 #include <utmps/utmps.h>
 #include "utmps-internal.h"
 
-int utmps_putline (utmps *a, struct utmpx const *b, tain_t const *deadline, tain_t *stamp)
+int utmps_putline (utmps *a, struct utmpx const *b, tain const *deadline, tain *stamp)
 {
   ssize_t r ;
   char buf[1 + sizeof(struct utmpx)] = "E" ;

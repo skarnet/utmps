@@ -29,7 +29,7 @@ int main (void)
 {
   struct utmpx b ;
   char const *x ;
-  tain_t deadline ;
+  tain deadline ;
   size_t w ;
   uid_t uid ;
   int fd ;

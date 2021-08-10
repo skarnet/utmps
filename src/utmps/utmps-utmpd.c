@@ -24,7 +24,7 @@ static int fd = -1 ;
 
 static void get0 (char *s, size_t n)
 {
-  tain_t deadline ;
+  tain deadline ;
   tain_ulong(&deadline, 30) ;
   tain_add_g(&deadline, &deadline) ;
   if (buffer_timed_get_g(buffer_0small, s, n, &deadline) < n)
@@ -33,7 +33,7 @@ static void get0 (char *s, size_t n)
 
 static void flush1 (void)
 {
-  tain_t deadline ;
+  tain deadline ;
   tain_ulong(&deadline, 30) ;
   tain_add_g(&deadline, &deadline) ;
   if (!buffer_timed_flush_g(buffer_1small, &deadline))
@@ -246,7 +246,7 @@ int main (void)
 
   for (;;)
   {
-    tain_t deadline ;
+    tain deadline ;
     char c ;
     tain_add_g(&deadline, &tain_infinite_relative) ;
     if (!buffer_timed_get_g(buffer_0small, &c, 1, &deadline)) break ;

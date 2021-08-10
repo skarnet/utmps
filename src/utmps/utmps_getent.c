@@ -7,7 +7,7 @@
 #include <utmps/utmps.h>
 #include "utmps-internal.h"
 
-int utmps_getent (utmps *a, struct utmpx *b, tain_t const *deadline, tain_t *stamp)
+int utmps_getent (utmps *a, struct utmpx *b, tain const *deadline, tain *stamp)
 {
   ssize_t r ;
   char buf[1 + sizeof(struct utmpx)] ;

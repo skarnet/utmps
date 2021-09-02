@@ -17,6 +17,6 @@ int utmps_putline (utmps *a, struct utmpx const *b, tain const *deadline, tain *
   r = ipc_timed_recv(a->fd, buf, 1, 0, deadline, stamp) ;
   if (r < 0) return 0 ;
   if (!r) return (errno = EPIPE, 0) ;
-  if (buf[0]) return (errno = buf[0], 0) ;
+  if (buf[0]) return (errno = (unsigned char)buf[0], 0) ;
   return 1 ;
 }

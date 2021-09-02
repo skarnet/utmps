@@ -18,7 +18,7 @@ int utmps_updwtmpx (char const *path, struct utmpx const *b, tain const *deadlin
   r = ipc_timed_recv(a.fd, buf, 1, 0, deadline, stamp) ;
   if (r < 0) goto err ;
   if (!r) { errno = EPIPE ; goto err ; }
-  if (buf[0]) { errno = buf[0] ; goto err ; }
+  if (buf[0]) { errno = (unsigned char)buf[0] ; goto err ; }
   utmps_end(&a) ;
   return 1 ;
 

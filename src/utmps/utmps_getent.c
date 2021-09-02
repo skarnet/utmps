@@ -15,7 +15,7 @@ int utmps_getent (utmps *a, struct utmpx *b, tain const *deadline, tain *stamp)
   r = ipc_timed_recv(a->fd, buf, sizeof(buf), 0, deadline, stamp) ;
   if (r < 0) return 0 ;
   if (!r) return (errno = EPIPE, 0) ;
-  if (buf[0]) return (errno = buf[0], 0) ;
+  if (buf[0]) return (errno = (unsigned char)buf[0], 0) ;
   utmps_utmpx_unpack(buf + 1, b) ;
   return 1 ;
 }

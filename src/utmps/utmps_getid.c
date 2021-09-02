@@ -21,7 +21,7 @@ int utmps_getid (utmps *a, unsigned short type, char const *id, struct utmpx *b,
   r = ipc_timed_recv(a->fd, rbuf, sizeof(rbuf), 0, deadline, stamp) ;
   if (r < 0) return 0 ;
   if (!r) return (errno = EPIPE, 0) ;
-  if (rbuf[0]) return (errno = rbuf[0], 0) ;
+  if (rbuf[0]) return (errno = (unsigned char)rbuf[0], 0) ;
   utmps_utmpx_unpack(rbuf + 1, b) ;
   return 1 ;
 }

@@ -1,6 +1,7 @@
 BIN_TARGETS := \
 utmps-utmpd \
-utmps-wtmpd
+utmps-wtmpd \
+utmps-write
 
 LIBEXEC_TARGETS :=
 

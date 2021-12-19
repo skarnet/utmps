@@ -1,0 +1,6 @@
+libutmps.a.xyzzy
+${LIBNSSS}
+-lskarnet
+${SOCKET_LIB}
+#{SYSCLOCK_LIB}
+${MAYBEPTHREAD_LIB}

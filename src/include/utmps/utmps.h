@@ -27,7 +27,7 @@ extern int utmps_getid (utmps *, unsigned short, char const *, struct utmpx *, t
 extern int utmps_getline (utmps *, char const *, struct utmpx *, tain const *, tain *) ;
 #define utmps_getline_g(a, line, b, deadline) utmps_getline(a, line, b, (deadline), &STAMP)
 extern int utmps_putline (utmps *, struct utmpx const *, tain const *, tain *) ;
-#define utmps_putline_g(a, entry, deadline) utmps_putline(a, entry, (deadine), &STAMP)
+#define utmps_putline_g(a, entry, deadline) utmps_putline(a, entry, (deadline), &STAMP)
 
 extern int utmps_updwtmpx (char const *, struct utmpx const *, tain const *, tain *) ;
 #define utmps_updwtmpx_g(file, b, deadline) utmps_updwtmpx(file, b, (deadline), &STAMP)

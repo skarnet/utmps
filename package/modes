@@ -1,2 +1,3 @@
 utmps-utmpd	0755
 utmps-wtmpd	0755
+utmps-write	0755

@@ -3,8 +3,11 @@
 #include <sys/types.h>
 #include <string.h>
 #include <errno.h>
+
+#include <skalibs/gccattributes.h>
 #include <skalibs/types.h>
 #include <skalibs/unix-timed.h>
+
 #include <utmps/utmpx.h>
 #include <utmps/utmps.h>
 #include "utmps-internal.h"
@@ -12,7 +15,7 @@
 int utmps_getid (utmps *a, unsigned short type, char const *id, struct utmpx *b, tain const *deadline, tain *stamp)
 {
   ssize_t r ;
-  char sbuf[1 + USHORT_PACK + UTMPS_UT_IDSIZE] __attribute__ ((nonstring)) ;
+  char sbuf[1 + USHORT_PACK + UTMPS_UT_IDSIZE] gccattr_nonstring ;
   char rbuf[1 + sizeof(struct utmpx)] ;
   sbuf[0] = 'i' ;
   ushort_pack_big(sbuf + 1, type) ;

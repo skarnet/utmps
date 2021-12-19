@@ -3,7 +3,10 @@
 #include <sys/types.h>
 #include <string.h>
 #include <errno.h>
+
+#include <skalibs/gccattributes.h>
 #include <skalibs/unix-timed.h>
+
 #include <utmps/utmpx.h>
 #include <utmps/utmps.h>
 #include "utmps-internal.h"
@@ -11,7 +14,7 @@
 int utmps_getline (utmps *a, char const *line, struct utmpx *b, tain const *deadline, tain *stamp)
 {
   ssize_t r ;
-  char sbuf[1 + UTMPS_UT_LINESIZE] __attribute__ ((nonstring)) ;
+  char sbuf[1 + UTMPS_UT_LINESIZE] gccattr_nonstring ;
   char rbuf[1 + sizeof(struct utmpx)] ;
   sbuf[0] = 'l' ;
   strncpy(sbuf + 1, line, UTMPS_UT_LINESIZE) ;

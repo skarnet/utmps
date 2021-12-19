@@ -26,18 +26,18 @@ struct utmpx
 {
   short ut_type ;
   pid_t ut_pid ;
-  char ut_line[UTMPS_UT_LINESIZE] ;
-  char ut_id[UTMPS_UT_IDSIZE] ;
-  char ut_user[UTMPS_UT_NAMESIZE] ;
+  char ut_line[UTMPS_UT_LINESIZE] __attribute__((nonstring)) ;
+  char ut_id[UTMPS_UT_IDSIZE] __attribute__((nonstring)) ;
+  char ut_user[UTMPS_UT_NAMESIZE] __attribute__((nonstring)) ;
 
-  char ut_host[UTMPS_UT_HOSTSIZE] ;
+  char ut_host[UTMPS_UT_HOSTSIZE] __attribute__((nonstring)) ;
   struct exit_status ut_exit ;
   pid_t ut_session ;
 
   struct timeval ut_tv ;
 
   uint32_t ut_addr_v6[4] ;
-  char _dummy[20] ;
+  char _dummy[20] __attribute__((nonstring)) ;
 } ;
 
 #define EMPTY 0

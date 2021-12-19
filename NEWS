@@ -1,5 +1,13 @@
 Changelog for utmps.
 
+In 0.1.1.0
+----------
+
+ - Bugfixes.
+ - New binary: utmps-write. It's a generic utmp client, writing
+user-defined records to the utmp and/or wtmp databases.
+
+
 In 0.1.0.3
 ----------
 

@@ -1,0 +1,100 @@
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta http-equiv="Content-Language" content="en" />
+    <title>utmps: the utmps-write program</title>
+    <meta name="Description" content="utmps: the utmps-write program" />
+    <meta name="Keywords" content="utmps utmp wtmp database client writing" />
+    <!-- <link rel="stylesheet" type="text/css" href="//skarnet.org/default.css" /> -->
+  </head>
+<body>
+
+<p>
+<a href="index.html">utmps</a><br />
+<a href="//skarnet.org/software/">Software</a><br />
+<a href="//skarnet.org/">skarnet.org</a>
+</p>
+
+<h1> The utmps-write program </h1>
+
+<p>
+utmps-write is a command-line generic utmp client for utmps.
+It sends an arbitrary utmp entry to the utmpd and/or wtmpd daemon. It can
+be used to test utmps installations.
+</p>
+
+<h2> Interface </h2>
+
+<pre>
+     utmps-write [ -u ] [ -w ] [ -U <em>utmpd-socket</em> ] [ -W <em>wtmpd-socket</em> ] [ -t <em>timeout</em> ] [ -T <em>timestamp</em> ] [ -h <em>host</em> ] [ -i <em>ip</em> ] [ -l <em>user</em> ] [ -p <em>pid</em> ] <em>id</em> <em>type</em> <em>line</em>
+</pre>
+
+<ul>
+ <li> <tt>utmps-write</tt> constructs an utmp entry of type <em>type</em>, with identifier <em>id</em>, containing the line <em>line</em>. </li>
+ <li> Other fields can also be manually filled via options; by default, <tt>utmps-write</tt> will put in reasonable values. </li>
+ <li> <tt>utmps-write</tt> connects to a <a href="utmps-utmpd.html">utmpd</a> and/or a
+<a href="utmps-wtmpd.html">wtmpd</a> instance, and sends them that utmp entry for writing. </li>
+ <li> It exits 0 on success, or prints an error message on stderr. </li>
+</ul>
+
+<p>
+ The <em>type</em> argument must be symbolic: EMPTY, BOOT_TIME etc. The valid types
+are the symbolic constants for the <tt>ut_type</tt> field of the <tt>utmpx</tt> structure,
+as documented <a href="https://man7.org/linux/man-pages/man5/utmp.5.html">here</a>
+or in the <tt>utmps/utmpx.h</tt> header provided with the utmps package.
+</p>
+
+<h2> Options </h2>
+
+<ul>
+ <li> <tt>-u</tt>&nbsp;: add the entry to the utmp database. </li>
+ <li> <tt>-w</tt>&nbsp;: add the entry to the wtmp database. At least one of the <tt>-u</tt> or <tt>-w</tt>
+option must be given. </li>
+ <li> <tt>-U</tt>&nbsp;<em>utmpd-socket</em>&nbsp;: if the <tt>-u</tt> option has been given,
+connect to a utmpd instance listening on <em>utmpd-socket</em>. The default is the compile-time
+default, <tt>/run/utmps/.utmpd-socket</tt> or the value given to the <tt>--with-utmp-socket</tt>
+configure option. </li>
+ <li> <tt>-W</tt>&nbsp;<em>wtmpd-socket</em>&nbsp;: if the <tt>-w</tt> option has been given,
+connect to a wtmpd instance listening on <em>wtmpd-socket</em>. The default is the compile-time
+default, <tt>/run/utmps/.wtmpd-socket</tt> or the value given to the <tt>--with-wtmp-socket</tt>
+configure option. </li>
+ <li> <tt>-t</tt>&nbsp;<em>timeout</em>&nbsp;: if the operations have not been completed
+under <em>timeout</em> milliseconds, exit with an error message. By default, <tt>utmps-write</tt>
+will wait forever for an answer from the utmpd or wtmpd daemons. </li>
+ <li> <tt>-T</tt>&nbsp;<em>timestamp</em>&nbsp;: spoof the <tt>ut_tv</tt> field of the utmp
+entry. <em>timestamp</em> must be given as an absolute
+<a href="https://cr.yp.to/libtai/tai64.html#tai64n">TAI64N label</a> in external TAI64N format,
+prepended with a <tt>@</tt> character. By default, <tt>ut_tv</tt> will contain the time when
+<tt>utmps-write</tt> was invoked. </li>
+ <li> <tt>-h</tt>&nbsp;<em>host</em>&nbsp;: spoof the <tt>ut_host</tt> field of the utmp entry.
+By default, it is empty (all null characters). </li>
+ <li> <tt>-i</tt>&nbsp;<em>ip</em>&nbsp;: spoof the <tt>ut_addr_v6</tt> field of the utmp entry.
+<em>ip</em> can be given as an ipv4 or an ipv6 address. By default, it's <tt>::</tt> (all null
+characters). </li>
+ <li> <tt>-l</tt>&nbsp;<em>user</em>&nbsp;: spoof the <tt>ut_user</tt> field of the utmp entry.
+This can only be done by root, otherwise the utmp or wtmp daemon will refuse to add the entry.
+By default, the field contains the user's name as obtained by
+<a href="https://pubs.opengroup.org/onlinepubs/9699919799/functions/getpwuid.html">getpwuid()</a>. </li>
+ <li> <tt>-p</tt>&nbsp;<em>pid</em>&nbsp;: spoof the <tt>ut_pid</tt> field of the utmp entry.
+By default, the field contains the pid of the <tt>utmps-write</tt> process. </li>
+</ul>
+
+<h2> Notes </h2>
+
+<ul>
+ <li> There is an official API to <em>write</em> a complete utmp entry to the
+utmp or the wtmp database, and this is what <tt>utmps-write</tt> uses. However,
+there is no official API to <em>read</em>, and format, a complete utmp entry from
+the databases; you can read them from instance via util-linux's
+<a href="https://man7.org/linux/man-pages/man1/utmpdump.1.html">utmpdump</a>
+utility, but you need to give it the direct path to the utmp and wtmp files. </li>
+ <li> The wtmp database can only grow; a user calling <tt>utmps-write -w</tt>
+repeatedly can easily make it grow fast and indefinitely, using up all the available
+disk space. This is a fundamental problem with the design of utmp, and is already
+achievable without the use of <tt>utmps-write</tt>. The only solution is for
+administrators to detect fast-growing wtmp files, and clean them up or archive them. </li>
+</ul>
+
+</body>
+</html>

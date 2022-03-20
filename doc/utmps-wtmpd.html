@@ -34,7 +34,7 @@ a script as a part of a "wtmpd"
 on how to run such a service.
  The simplest way to do so, for testing purposes, is a command line such as:
 </p>
-<pre>s6-ipcserver .wtmpd-socket utmps-wtmpd</pre>
+<pre>s6-ipcserver .wtmpd-socket utmps-wtmpd wtmp</pre>
 <p>
  while being in the <tt>/run/utmps</tt> directory.
 </p>
@@ -72,6 +72,12 @@ it is recommended to create a <em>utmp</em> user and group, dedicated to
 utmps-wtmpd and
 <a href="utmps-utmpd.html">utmps-utmpd</a> operation, and run the
 superserver as this user and group.
+</p>
+
+<p>
+ If no argument is given to utmps-wtmpd, wtmp logs will be added to the <tt>wtmp</tt>
+file in utmps-wtmpd's working directory. If an argument is given, wtmp logs
+will be added to that file instead.
 </p>
 
 </body>

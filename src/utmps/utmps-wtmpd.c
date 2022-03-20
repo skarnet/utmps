@@ -25,9 +25,10 @@ static void answer (int e)
   write(1, (char *)&c, 1) ;
 }
 
-int main (void)
+int main (int argc, char const *const *argv)
 {
   struct utmpx b ;
+  char const *file = "wtmp" ;
   char const *x ;
   tain deadline ;
   size_t w ;
@@ -37,9 +38,10 @@ int main (void)
   PROG = "utmps-wtmpd" ;
 
   x = ucspi_get("REMOTEEUID") ;
-  if (!x) strerr_diefu1x(100, "get $IPCREMOTEEUID from environment") ;
+  if (!x) strerr_diefu1x(100, "get PROTO or IPCREMOTEEUID from environment") ;
   if (!uid0_scan(x, &uid)) strerr_dieinvalid(100, "IPCREMOTEEUID") ;
   if (ndelay_on(0) < 0) strerr_diefu1sys(111, "set stdin non-blocking") ;
+  if (argc >= 2 && argv[1]) file = argv[1] ;
   tain_now_set_stopwatch_g() ;
   tain_ulong(&deadline, 30) ;
   tain_add_g(&deadline, &deadline) ;
@@ -48,7 +50,11 @@ int main (void)
   if (!w) strerr_diefu1sys(111, "read from stdin") ;
   if (buf[0] != '+') { errno = EPROTO ; strerr_diefu1sys(111, "read command") ; }
   w = buffer_timed_get_g(buffer_0small, buf, sizeof(struct utmpx), &deadline) ; 
-  if (w < sizeof(struct utmpx)) strerr_diefu1sys(111, "read from stdin") ;
+  if (w < sizeof(struct utmpx))
+  {
+    errno = EPIPE ;
+    strerr_diefu1sys(111, "read from stdin") ;
+  }
   utmps_utmpx_unpack(buf, &b) ;
   b.ut_user[UTMPS_UT_NAMESIZE - 1] = 0 ;
   if (uid)
@@ -76,21 +82,21 @@ int main (void)
     }
   }
   
-  fd = open_append("wtmp") ;
+  fd = open_append(file) ;
   if (fd < 0)
   {
     answer(errno) ;
-    strerr_diefu2sys(111, "open", " wtmp") ;
+    strerr_diefu2sys(111, "open ", file) ;
   }
   if (fd_lock(fd, 1, 0) < 1)
   {
     answer(errno) ;
-    strerr_diefu2sys(111, "lock", " wtmp") ;
+    strerr_diefu2sys(111, "lock ", file) ;
   }
   if (lseek(fd, 0, SEEK_END) < 0)
   {
     answer(errno) ;
-    strerr_diefu2sys(111, "lseek on", " wtmp") ;
+    strerr_diefu2sys(111, "lseek on ", file) ;
   }
   w = allwrite(fd, buf, sizeof(struct utmpx)) ;
   if (w < sizeof(struct utmpx))
@@ -104,7 +110,7 @@ int main (void)
     fd_unlock(fd) ;
     answer(e) ;
     errno = e ;
-    strerr_diefu2sys(111, "append to", " wtmp") ;
+    strerr_diefu2sys(111, "append to ", file) ;
   }
   fsync(fd) ;
   fd_unlock(fd) ;

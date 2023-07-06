@@ -49,12 +49,12 @@ static void answer (int e)
 
 static void maybe_open (void)
 {
-  if (fd < 0)
+  if (fd == -1)
   {
     mode_t m = umask(0) ;
-    fd = open("utmp", O_RDWR | O_CREAT, 0644) ;
+    fd = open3("utmp", O_RDWR | O_CREAT, 0644) ;
     umask(m) ;
-    if (fd < 0)
+    if (fd == -1)
     {
       answer(errno) ;
       strerr_diefu1sys(111, "open utmp file") ;
@@ -65,7 +65,7 @@ static void maybe_open (void)
 static int read_utmp_entry_unlocked (char *s)
 {
   ssize_t r = read(fd, s, sizeof(struct utmpx)) ;
-  if (r < 0) goto err ;
+  if (r == -1) goto err ;
   if (!r) return 0 ;
   if (r == sizeof(struct utmpx)) return 1 ;
   errno = EPIPE ;
@@ -225,7 +225,7 @@ static void do_putline (uid_t uid, gid_t gid)
 static void do_rewind (void)
 {
   maybe_open() ;
-  if (lseek(fd, 0, SEEK_SET) < 0) { answer(errno) ; return ; }
+  if (lseek(fd, 0, SEEK_SET) == -1) { answer(errno) ; return ; }
   answer(0) ;
 }
 
@@ -241,7 +241,7 @@ int main (void)
   x = ucspi_get("REMOTEEGID") ;
   if (!x) strerr_diefu1x(100, "get $IPCREMOTEEGID from environment") ;
   if (!gid0_scan(x, &gid)) strerr_dieinvalid(100, "IPCREMOTEEGID") ;
-  if (ndelay_on(0) < 0) strerr_diefu1sys(111, "set stdin non-blocking") ;
+  if (ndelay_on(0) == -1) strerr_diefu1sys(111, "set stdin non-blocking") ;
   tain_now_set_stopwatch_g() ;
 
   for (;;)

@@ -1,5 +1,11 @@
 Changelog for utmps.
 
+In 0.1.2.3
+----------
+
+ - Install static libraries in /usr/lib by default.
+
+
 In 0.1.2.2
 ----------
 

@@ -1,7 +1,6 @@
-#!/bin/execlineb -P
+#!/bin/execlineb -S1
 
 fdmove -c 2 1
-unexport ?
 s6-setuidgid utmp
 cd /var/log  # will only work after /var/log is mounted!
 fdmove 1 3

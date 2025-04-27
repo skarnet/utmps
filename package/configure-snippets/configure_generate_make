@@ -1,0 +1,12 @@
+if $libcincludes ; then
+  echo "DO_LIBC_INCLUDES := 1"
+else
+  echo "DO_LIBC_INCLUDES :="
+fi
+if $usensss ; then
+  echo "LIBNSSS := -lnsss"
+  echo "MAYBEPTHREAD_LIB := -lpthread"
+else
+  echo "LIBNSSS :="
+  echo "MAYBEPTHREAD_LIB :="
+fi

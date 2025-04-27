@@ -1,0 +1,2 @@
+echo "#define ${package_macro_name}_UTMPD_PATH \"$utmpdpath\""
+echo "#define ${package_macro_name}_WTMPD_PATH \"$wtmpdpath\""

@@ -1,0 +1,6 @@
+    --enable-libc-includes|--enable-libc-includes=yes) libcincludes=true ;;
+    --disable-libc-includes|--enable-libc-includes=no) libcincludes=false ;;
+    --enable-nsss|--enable-nsss=yes) usensss=true ;;
+    --disable-nsss|--enable-nsss=no) usensss=false ;;
+    --with-utmpd-socket=*) utmpdpath=${arg#*=} ;;
+    --with-wtmpd-socket=*) wtmpdpath=${arg#*=} ;;

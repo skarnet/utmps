@@ -21,7 +21,7 @@
 <p>
  utmps is a secure implementation of the <em>utmp</em> functionality, i.e.
 user accounting on Unix systems. It includes full POSIX
-<a href="http://pubs.opengroup.org/onlinepubs/9699919799/basedefs/utmpx.h.html">utmpx.h</a>
+<a href="http://pubs.opengroup.org/onlinepubs/9799919799/basedefs/utmpx.h.html">utmpx.h</a>
 functionality, a few extensions created by GNU, and an underlying
 <a href="libutmps/">C client library</a> with better error reporting
 than the POSIX interface specifies.
@@ -48,7 +48,7 @@ programs allowed to access the utmp and wtmp databases respectively.
 It provides the
 <a href="libutmps/">utmps client library</a> to communicate with
 those daemons; and it implements the
-<a href="http://pubs.opengroup.org/onlinepubs/9699919799/basedefs/utmpx.h.html">utmpx.h</a>
+<a href="http://pubs.opengroup.org/onlinepubs/9799919799/basedefs/utmpx.h.html">utmpx.h</a>
 interfaces, and the extensions, as wrappers for this client library.
 </p>
 
@@ -66,7 +66,7 @@ a Unix domain superserver such as
 <a href="//skarnet.org/software/s6/s6-ipcserver.html">s6-ipcserver</a>
 is required. s6-ipcserver listens to a socket, and spawns a
 <a href="utmps-utmpd.html">utmps-utmpd</a> process when a client
-calls <a href="http://pubs.opengroup.org/onlinepubs/9699919799/functions/setutxent.html">setutxent()</a>
+calls <a href="http://pubs.opengroup.org/onlinepubs/9799919799/functions/setutxent.html">setutxent()</a>
 for instance.
 </p>
 

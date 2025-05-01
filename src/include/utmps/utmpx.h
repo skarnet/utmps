@@ -79,6 +79,12 @@ extern void logwtmp (char const *, char const *, char const *) ;
 # define ut_time ut_tv.tv_sec
 #endif
 
+#ifdef _DEFAULT_SOURCE
+extern int utmps_getutxent_r (struct utmpx *, struct utmpx **) ;
+extern int utmps_getutxid_r (struct utmpx const *, struct utmpx *, struct utmpx **) ;
+extern int utmps_getutxent_r (struct utmpx const *, struct utmpx *, struct utmpx **) ;
+#endif
+
 #ifdef __cplusplus
 }
 #endif

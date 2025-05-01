@@ -1,5 +1,6 @@
   --enable-nsss                 use the nsss library for user information [disabled]
-  --enable-libc-includes        overwrite utmpx.h in includedir [disabled]
+  --enable-utmp                 also export utmp.h with Linux-specific declarations
+  --enable-libc-includes        overwrite utmp[x].h in includedir [disabled]
 
   --with-utmpd-socket=PATH      assume the utmpd socket is at PATH [/run/utmps/.utmpd-socket]
   --with-wtmpd-socket=PATH      assume the wtmpd socket is at PATH [/run/utmps/.wtmpd-socket]

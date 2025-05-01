@@ -1,4 +1,5 @@
 usensss=false
+doutmp=false
 libcincludes=false
 utmpdpath=/run/utmps/.utmpd-socket
 wtmpdpath=/run/utmps/.wtmpd-socket

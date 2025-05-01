@@ -1,3 +1,5 @@
+    --enable-utmp|--enable-utmp=yes) doutmp=true ;;
+    --disable-utmp|--enable-utmp=no) doutmp=false ;;
     --enable-libc-includes|--enable-libc-includes=yes) libcincludes=true ;;
     --disable-libc-includes|--enable-libc-includes=no) libcincludes=false ;;
     --enable-nsss|--enable-nsss=yes) usensss=true ;;

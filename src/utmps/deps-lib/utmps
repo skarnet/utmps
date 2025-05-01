@@ -1,7 +1,10 @@
 endutxent.o
 getutxent.o
+getutxent_r.o
 getutxid.o
+getutxid_r.o
 getutxline.o
+getutxline_r.o
 logwtmp.o
 pututxline.o
 setutxent.o

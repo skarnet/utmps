@@ -1,5 +1,11 @@
 Changelog for utmps.
 
+In 0.1.3.2
+----------
+
+ - Support for shared libraries on MacOS.
+
+
 In 0.1.3.1
 ----------
 

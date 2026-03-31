@@ -1,5 +1,13 @@
 Changelog for utmps.
 
+In 0.1.3.3
+----------
+
+ - Bugfixes.
+ - Support for disabling RPATH.
+ - Adaptation to skalibs-2.15.0.0.
+
+
 In 0.1.3.2
 ----------
 
